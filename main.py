@@ -55,6 +55,19 @@ def AddSub():
     #CLOSING THE FILE
     MyFile.close()
 
+    #OPENING THE HOMEWORK FILE
+    FileName = "Homework.csv"
+    AccessMode = "a"
+    MyFile = open(FileName, AccessMode)
+    #ADD IT TO HOMEWORK
+    Exercice = input("Enter ur Homework : ")
+    Deadline = input("Enter ur Deadline : ")
+    Status = input("Enter ur Status : ")
+    MyFile.write(f"{NewSubject},{Exercice},{Deadline},{Status}\n")
+    #CLOSING THE FILE
+    MyFile.close()
+    return
+
 def DeleteSub():
     #OPENING THE SUBJECTS FILE
     FileName = "Subjects.csv"
@@ -79,6 +92,25 @@ def DeleteSub():
         MyFile.write(Subjects[i])
     #Close the file
     MyFile.close()
+        
+    #OPENING THE HOMEWORK FILE
+    FileName = "Homework.csv"
+    AccessMode = "r"
+    with open(FileName, AccessMode) as MyFile:
+        #converting data to a list
+        Rows = csv.reader(MyFile)
+        Homework = []
+        for subject in Rows:
+            Homework.append(subject)
+    del Homework[operation]
+    #Editing the Subjects File
+    AccessMode = "w"
+    MyFile = open(FileName, AccessMode) 
+    for i in range(len(Subjects)):
+        MyFile.write(Subjects[i][0],Subjects[i][1],Subjects[i][2],Subjects[i][3])
+    #Close the file
+    MyFile.close()
+    return
 
 def EditSub():
     #OPENING THE SUBJECTS FILE
@@ -96,7 +128,6 @@ def EditSub():
     operation = int(input(f'Choose a subject to edit (0-{i}) : '))
     NewSub = input("Enter the new Subject name : ")
     #editing the subject
-    print(f'{Subjects[operation]} was edited successfully !')
     Subjects[operation] = NewSub
     #Editing the Subjects File
     AccessMode = "w"
@@ -105,30 +136,61 @@ def EditSub():
         MyFile.write(f'{Subjects[i]}\n')
     #Close the file
     MyFile.close()
+    return
 
-#CALLING THE FUNCTION
-answer = home()
-#AVOIDING USER TO ENTER AN INVALID VALUE
-while answer not in [1,2,3,4,5,6,7,8,9,10]:    
-    print('Invalid Number')
-    answer = int(input("Enter a Number between (1-10) to Continue : "))
+a = 0
+
+if a == 0:
+
+else:
+    #CALLING THE FUNCTION
+    answer = home()
+    #AVOIDING USER TO ENTER AN INVALID VALUE
+    while answer not in [1,2,3,4,5,6,7,8,9,10]:    
+        print('Invalid Number')
+        answer = int(input("Enter a Number between (1-10) to Continue : "))
 
 
-#ENTERING THE DASHBOARD MENU
-if answer == 1:
-    print('Dashboard')
+    #ENTERING THE DASHBOARD MENU
+    if answer == 1:
+        print('Dashboard')
 
-#ENTERING THE SUBJECTS MENU
-elif answer == 2:
-    choice = Subjects()
-    if choice == 0:
-        home()
-    elif choice == 1:
-        AddSub()
-    elif choice == 2:
-        DeleteSub()
-    elif choice == 3:
-        EditSub()
+    #ENTERING THE SUBJECTS MENU
+    elif answer == 2:
+        choice = Subjects()
+        if choice == 0:
+            home()
+        elif choice == 1:
+            AddSub()
+        elif choice == 2:
+            DeleteSub()
+        elif choice == 3:
+            EditSub()
 
-#ENTERING THE HOMEWORKS MENU
-elif answer == 3:
+    #ENTERING THE HOMEWORKS MENU
+    elif answer == 3:
+    
+#def Subjects():
+    #INFORMING USER WHAT HE SHOULD DO 
+        print("===================================")
+        print("             Homework              ")
+        print("===================================")
+        print("0. Return")
+        print("1. Add Homework")
+        print("2. Delete Homework")
+        print("3. Edit Homework")
+        print("4. Check ur Homework")
+        #AVOIDING USER TO ENTER AN INVALID VALUE
+        try:
+            choice = int(input("Enter your choice (0-4) : "))
+        except:
+            print('Invalid Number')
+            choice = int(input("Enter your choice (0-4) : "))
+        while answer not in [0,1,2,3,4]:
+            print('Invalid Number')
+            choice = int(input("Enter your choice (0-4) : "))
+
+        if choice == 0:
+            home()
+        elif choice == 1:
+            print("d")
