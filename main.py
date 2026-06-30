@@ -1,6 +1,6 @@
 #Importing csv to read it
 import csv
-#CREATING HOME FUNCTION SO WE CAN RECALL IT LATER WHEN RETURN
+#CREATING FUNCTIONs SO WE CAN RECALL IT LATER WHEN RETURN
 def home():
     #INFORMING USER WHAT HE SHOULD DO 
     print("===================================")
@@ -18,55 +18,117 @@ def home():
     print("10. Exit")
     #AVOIDING USER TO ENTER AN INVALID VALUE
     try:
-        answer = int(input("Enter a Number between (1-10) to Continue : "))
+        answer = int(input("Select a menu option (1-10) : "))
     except:
         print('Invalid Number')
-        answer = int(input("Enter a Number between (1-10) to Continue : "))
+        answer = int(input("Select a menu option (1-10) : "))
     return answer
-#CALLING THE FUNCTION
-home()
-answer = home()
-#AVOIDING USER TO ENTER AN INVALID VALUE
-while answer not in [1,2,3,4,5,6,7,8,9,10]:    
-    print('Invalid Number')
-    answer = int(input("Enter a Number between (1-10) to Continue : "))
-#ENTERING THE CHOSEN MENU
-if answer == 1:
-    print('Dashboard')
-elif answer == 2:
+
+def Subjects():
     #INFORMING USER WHAT HE SHOULD DO 
     print("===================================")
     print("             Subjects              ")
     print("===================================")
+    print("0. Return")
     print("1. Add Subject")
     print("2. Delete Subject")
     print("3. Edit Subject")
     #AVOIDING USER TO ENTER AN INVALID VALUE
     try:
-        choice = int(input("Enter a Number between (1-3) to Continue : "))
+        choice = int(input("Enter your choice (0-3) : "))
     except:
         print('Invalid Number')
-        choice = int(input("Enter a Number between (1-3) to Continue : "))
-    while answer not in [1,2,3]:
+        choice = int(input("Enter your choice (0-3) : "))
+    while answer not in [0,1,2,3]:
         print('Invalid Number')
-        choice = int(input("Enter a Number between (1-10) to Continue : "))
-    #ENTERING THE CHOSEN OPERATION
-    if choice == 1:
-        #OPENING THE SUBJECTS FILE
-        FileName = "Subjects.txt"
-        AccessMode = "a"
-        MyFile = open(FileName, AccessMode)
-        #ADD A NEW SUBJECT
-        NewSubject = input("Enter a New Subject : ")
-        MyFile.write(f"{NewSubject}\n")
-        #CLOSING THE FILE
-        MyFile.close()
+        choice = int(input("Enter your choice (0-3) : "))
+    return choice
+
+def AddSub():
+    #OPENING THE SUBJECTS FILE
+    FileName = "Subjects.csv"
+    AccessMode = "a"
+    MyFile = open(FileName, AccessMode)
+    #ADD A NEW SUBJECT
+    NewSubject = input("Enter a New Subject : ")
+    MyFile.write(f"{NewSubject}\n")
+    #CLOSING THE FILE
+    MyFile.close()
+
+def DeleteSub():
+    #OPENING THE SUBJECTS FILE
+    FileName = "Subjects.csv"
+    AccessMode = "r"
+    with open(FileName, AccessMode) as MyFile:
+        #converting data to a list
+        Rows = csv.reader(MyFile)
+        Subjects = []
+        for subject in Rows:
+            Subjects.append(subject[0])        
+        for i in range(len(Subjects)):
+            print(f"{i}. {Subjects[i]}")
+    #choosing a file to delete
+    operation = int(input(f'Choose a subject to delete (0-{i}) : '))
+    #deleting the file
+    print(f'{Subjects[operation]} was deleted successfully !')
+    del Subjects[operation]
+    #Editing the Subjects File
+    AccessMode = "w"
+    MyFile = open(FileName, AccessMode) 
+    for i in range(len(Subjects)):
+        MyFile.write(Subjects[i])
+    #Close the file
+    MyFile.close()
+
+def EditSub():
+    #OPENING THE SUBJECTS FILE
+    FileName = "Subjects.csv"
+    AccessMode = "r"
+    with open(FileName, AccessMode) as MyFile:
+        #converting data to a list
+        Rows = csv.reader(MyFile)
+        Subjects = []
+        for subject in Rows:
+            Subjects.append(subject[0])        
+        for i in range(len(Subjects)):
+            print(f"{i}. {Subjects[i]}")
+    #choosing a subject to edit
+    operation = int(input(f'Choose a subject to edit (0-{i}) : '))
+    NewSub = input("Enter the new Subject name : ")
+    #editing the subject
+    print(f'{Subjects[operation]} was edited successfully !')
+    Subjects[operation] = NewSub
+    #Editing the Subjects File
+    AccessMode = "w"
+    MyFile = open(FileName, AccessMode) 
+    for i in range(len(Subjects)):
+        MyFile.write(f'{Subjects[i]}\n')
+    #Close the file
+    MyFile.close()
+
+#CALLING THE FUNCTION
+answer = home()
+#AVOIDING USER TO ENTER AN INVALID VALUE
+while answer not in [1,2,3,4,5,6,7,8,9,10]:    
+    print('Invalid Number')
+    answer = int(input("Enter a Number between (1-10) to Continue : "))
+
+
+#ENTERING THE DASHBOARD MENU
+if answer == 1:
+    print('Dashboard')
+
+#ENTERING THE SUBJECTS MENU
+elif answer == 2:
+    choice = Subjects()
+    if choice == 0:
+        home()
+    elif choice == 1:
+        AddSub()
     elif choice == 2:
-        #OPENING THE SUBJECTS FILE
-        FileName = "Subjects.csv"
-        AccessMode = "r"
-        with open(FileName, AccessMode) as MyFile:
-            #converting data to a list
-            Subjects = list(csv.reader(MyFile))
-            print(Subjects)
-        for subject in subjects
+        DeleteSub()
+    elif choice == 3:
+        EditSub()
+
+#ENTERING THE HOMEWORKS MENU
+elif answer == 3:
