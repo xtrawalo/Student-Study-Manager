@@ -10,23 +10,18 @@ def home():
     print("2. Subjects")
     print("3. Homeworks")
     print("4. Exams")
-    print("5. Assignments")
-    print("6. Study Sessions")
-    print("7. Daily Goals")
-    print("8. Statistics")
-    print("9. Save")
-    print("10. Exit")
+    print("5. Exit")
     #AVOIDING USER TO ENTER A stringers
     while True:
         try:
-            answer = int(input("Select a menu option (1-10) : "))
+            answer = int(input("Select a menu option (1-5) : "))
             break
         except:
             print('Invalid Number')
-    #AVOIDING USER TO ENTER AN number over 10 or less than 0
-    while answer not in [1,2,3,4,5,6,7,8,9,10]:
+    #AVOIDING USER TO ENTER AN number over 5 or less than 1
+    while answer not in [1,2,3,4,5]:
         try:
-            answer = int(input("Enter your choice (1-10) : "))
+            answer = int(input("Enter your choice (1-5) : "))
         except:
             print('Invalid Number')
     return answer
@@ -177,17 +172,18 @@ def Homework():
     print("1. Add Homework")
     print("2. Delete Homework")
     print("3. Edit Homework")
+    print("4. View Homework")
     #AVOIDING USER TO ENTER AN INVALID VALUE
     while True:
         try:
-            choice = int(input("Enter your choice (0-3) : "))
+            choice = int(input("Enter your choice (0-4) : "))
             break
         except:
             print('Invalid Number')
-    #AVOIDING USER TO ENTER AN number over 3 or less than 0
-    while choice not in [0,1,2,3]:
+    #AVOIDING USER TO ENTER AN number over 4 or less than 0
+    while choice not in [0,1,2,3,4]:
         try:
-            choice = int(input("Enter your choice (0-3) : "))
+            choice = int(input("Enter your choice (0-4) : "))
         except:
             print('Invalid Number')
     return choice
@@ -218,7 +214,7 @@ def DeleteHome():
             Homework.append(subject)
         for i, homework in enumerate(Homework):
             print(i, homework)
-        operation = int(input("choose a homework to delete (0-{i}) : "))
+        operation = int(input(f"choose a homework to delete (0-{i}) : "))
         del Homework[operation]
     #Opening Homework file
     FileName = "Homework.csv"
@@ -229,6 +225,48 @@ def DeleteHome():
         MyFile.write(f"{Homework[i][0]},{Homework[i][1]},{Homework[i][2]},{Homework[i][3]}\n")
     #Close the file
     MyFile.close()
+    return
+
+def EditHome():
+    FileName = "Homework.csv"
+    AccessMode = 'r'
+    with open(FileName, AccessMode) as MyFile:
+        #converting data to a list
+        Rows = list(csv.reader(MyFile))
+        Homework = []
+        for homework in Rows:
+            Homework.append(homework)        
+        for i in range(len(Homework)):
+            print(f"{i}. {Homework[i][0]}")
+        operation = int(input(f'Choose a Homework to edit (0-{i}) : '))
+        NewEx = input('Enter new Exercice (0 to keep old one): ')
+        if NewEx != "0":
+            Homework[operation][1] = NewEx
+        Newdate = input('Enter new Deadline (0 to keep old one) : ')
+        if Newdate != "0":
+            Homework[operation][2] = Newdate
+        NewStat = input('Enter new Status (0 to keep old one) : ')
+        if NewStat != "0":
+            Homework[operation][3] = NewStat
+    AccessMode = "w"
+    MyFile = open(FileName, AccessMode)
+    for i in range(len(Homework)):
+        MyFile.write(f"{Homework[i][0]},{Homework[i][1]},{Homework[i][2]},{Homework[i][3]}\n")
+    #Close the file
+    MyFile.close()
+    return
+
+def ViewHome():
+    FileName = "Homework.csv"
+    AccessMode = 'r'
+    with open(FileName, AccessMode) as MyFile:
+        #converting data to a list
+        Rows = list(csv.reader(MyFile))
+        Homework = []
+        for homework in Rows:
+            Homework.append(homework)  
+        for i in range(len(Homework)):
+            print(f"Subject: {Homework[i][0]} \nExercise: {Homework[i][1]} \nDue: {Homework[i][2]} \nStatus :{Homework[i][3]}\n")
     return
 
 #CALLING THE FUNCTION
@@ -259,3 +297,9 @@ elif answer == 3:
         AddHome()
     elif choice == 2:
         DeleteHome()
+    elif choice == 3:
+        EditHome()
+    elif choice == 4:
+        ViewHome()
+
+#ENTERING THE EXAMS MENU
