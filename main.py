@@ -11,14 +11,14 @@ def home():
     print("3. Homeworks")
     print("4. Exams")
     print("5. Exit")
-    #AVOIDING USER TO ENTER A stringers
+    #PREVENTING USER TO ENTER A TEXT
     while True:
         try:
             answer = int(input("Select a menu option (1-5) : "))
             break
         except:
             print('Invalid Number')
-    #AVOIDING USER TO ENTER AN number over 5 or less than 1
+    #PREVENTING USER TO ENTER A NUMBER OVER 5 OR LESS THAN 1
     while answer not in [1,2,3,4,5]:
         try:
             answer = int(input("Enter your choice (1-5) : "))
@@ -35,14 +35,14 @@ def Subjects():
     print("1. Add Subject")
     print("2. Delete Subject")
     print("3. Edit Subject")
-    #AVOIDING USER TO ENTER AN INVALID VALUE
+    #PREVENTING USER TO ENTER A TEXT
     while True:
         try:
             choice = int(input("Enter your choice (0-3) : "))
             break
         except:
             print('Invalid Number')
-    #AVOIDING USER TO ENTER AN number over 3 or less than 0
+    #PREVENTING USER TO ENTER A NUMBER OVER 3 OR LESS THAN 0
     while choice not in [0,1,2,3]:
         try:
             choice = int(input("Enter your choice (0-3) : "))
@@ -269,37 +269,154 @@ def ViewHome():
             print(f"Subject: {Homework[i][0]} \nExercise: {Homework[i][1]} \nDue: {Homework[i][2]} \nStatus :{Homework[i][3]}\n")
     return
 
-#CALLING THE FUNCTION
-answer = home()
+def Exams():
+    #INFORMING USER WHAT HE SHOULD DO 
+    print("===================================")
+    print("             Exams              ")
+    print("===================================")
+    print("0. Return")
+    print("1. Add Exam")
+    print("2. Delete Exam")
+    print("3. Edit Exam")
+    print("4. View Exam")
+    #PREVENTING USER TO ENTER A Text
+    while True:
+        try:
+            choice = int(input("Enter your choice (0-4) : "))
+            break
+        except:
+            print('Invalid Number')
+    #PREVENTING USER TO ENTER A NUMBER OVER THAN 4 OR LESS THAN 0
+    while choice not in [0,1,2,3,4]:
+        try:
+            choice = int(input("Enter your choice (0-4) : "))
+        except:
+            print('Invalid Number')
+    return choice
 
-#ENTERING THE DASHBOARD MENU
-if answer == 1:
-    print('Dashboard')
+def AddExam():
+    #opening Exams File
+    FileName = "Exams.csv"
+    AccessMode = "a"
+    MyFile = open(FileName, AccessMode)
+    #ADDing The Exam
+    Subject = input("Enter the exam subject : ")
+    Date = input("Enter the date of the exam : ")
+    MyFile.write(f"{Subject},{Date}\n")
+    #CLOSING THE FILE
+    MyFile.close()
+    return
 
-#ENTERING THE SUBJECTS MENU
-elif answer == 2:
-    choice = Subjects()
-    if choice == 0:
-        home()
-    elif choice == 1:
-        AddSub()
-    elif choice == 2:
-        DeleteSub()
-    elif choice == 3:
-        EditSub()
+def DeleteExam():
+    FileName = "Exams.csv"
+    AccessMode = "r"
+    with open(FileName, AccessMode) as MyFile:
+    #converting data to a list
+        Rows = csv.reader(MyFile)
+        Exams = []
+        for exam in Rows:
+            Exams.append(exam)
+        for i, exam in enumerate(Exams):
+            print(i, exam)
+        operation = int(input(f"choose an exam to delete (0-{i}) : "))
+        del Exams[operation]
+    #Opening Exams file
+    FileName = "Exams.csv"
+    AccessMode = "w"
+    MyFile = open(FileName, AccessMode)
+    #Saving changes
+    for i in range(len(Exams)):
+        MyFile.write(f"{Exams[i][0]},{Exams[i][1]}\n")
+    #Close the file
+    MyFile.close()
+    return
 
-#ENTERING THE HOMEWORKS MENU
-elif answer == 3:
-    choice = Homework()
-    if choice == 0:
-        home()
-    elif choice == 1:   
-        AddHome()
-    elif choice == 2:
-        DeleteHome()
-    elif choice == 3:
-        EditHome()
-    elif choice == 4:
-        ViewHome()
+def EditExam():
+    FileName = "Exams.csv"
+    AccessMode = 'r'
+    with open(FileName, AccessMode) as MyFile:
+        #converting data to a list
+        Rows = list(csv.reader(MyFile))
+        Exams = []
+        for exam in Rows:
+            Exams.append(exam)        
+        for i in range(len(Exams)):
+            print(f"{i}. {Exams[i][0]}")
+        operation = int(input(f'Choose an exam to edit (0-{i}) : '))
+        NewExam = input('Enter new date (0 to keep old one): ')
+        if NewExam != "0":
+            Exams[operation][1] = NewExam
+    AccessMode = "w"
+    MyFile = open(FileName, AccessMode)
+    for i in range(len(Exams)):
+        MyFile.write(f"{Exams[i][0]},{Exams[i][1]}\n")
+    #Close the file
+    MyFile.close()
+    return
 
-#ENTERING THE EXAMS MENU
+def ViewExam():
+    FileName = "Exams.csv"
+    AccessMode = 'r'
+    with open(FileName, AccessMode) as MyFile:
+        #converting data to a list
+        Rows = list(csv.reader(MyFile))
+        Exams = []
+        for exam in Rows:
+            Exams.append(exam)  
+        for i in range(len(Exams)):
+            print(f"Subject: {Exams[i][0]} \nDate: {Exams[i][1]}\n")
+    return
+
+a = 0
+while a == 0:
+    #CALLING THE FUNCTION
+    answer = home()
+
+    #ENTERING THE DASHBOARD MENU
+    if answer == 1:
+        print('Dashboard')
+
+    #ENTERING THE SUBJECTS MENU
+    elif answer == 2:
+        choice = Subjects()
+        if choice == 0:
+            home()
+        elif choice == 1:
+            AddSub()
+        elif choice == 2:
+            DeleteSub()
+        elif choice == 3:
+            EditSub()
+
+    #ENTERING THE HOMEWORKS MENU
+    elif answer == 3:
+        choice = Homework()
+        if choice == 0:
+            home()
+        elif choice == 1:   
+            AddHome()
+        elif choice == 2:
+            DeleteHome()
+        elif choice == 3:
+            EditHome()
+        elif choice == 4:
+            ViewHome()
+
+    #ENTERING THE EXAMS MENU
+    elif answer == 4:
+        choice = Exams()
+        if choice == 0:
+            home()
+        elif choice == 1:   
+            AddExam()
+        elif choice == 2:
+            DeleteExam()
+        elif choice == 3:
+            EditExam()
+        elif choice == 4:
+            ViewExam()
+    
+    elif answer == 5:
+        a = 1
+
+        
