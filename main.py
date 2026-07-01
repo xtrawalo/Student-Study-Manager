@@ -26,6 +26,45 @@ def home():
             print('Invalid Number')
     return answer
 
+def Dashboard():
+    print("===================================")
+    print("             Dashboard             ")
+    print("===================================")
+    FileName = 'Subjects.csv'
+    AccessMode = 'r'
+    with open(FileName, AccessMode) as MyFile:
+        Rows = csv.reader(MyFile)
+        Subjects = []
+        for subject in Rows:
+            Subjects.append(",".join(subject))
+        print(f"Subjects          : {len(Subjects)}")
+    FileName = 'Homework.csv'
+    AccessMode = 'r'
+    with open(FileName, AccessMode) as MyFile:
+        Rows = csv.reader(MyFile)
+        Homeworks = []
+        Pending = 0
+        Finished = 0
+        for homework in Rows:
+            Homeworks.append((homework[3]))
+        for homework in Homeworks:
+            if homework == 'Pending':
+                Pending += 1
+            elif homework == 'Finished':
+                Finished += 1
+        print(f"Pending Homework  : {Pending}")
+        print(f"Finished Homework : {Finished}")
+    FileName = 'Exams.csv'
+    AccessMode = 'r'
+    with open(FileName, AccessMode) as MyFile:
+        Rows = csv.reader(MyFile)
+        Exams = []
+        for exam in Rows:
+            Exams.append(exam[0])
+        print(f"Exams             : {len(Exams)}")
+        
+    return
+
 def Subjects():
     #INFORMING USER WHAT HE SHOULD DO 
     print("===================================")
@@ -68,7 +107,7 @@ def AddSub():
     #ADD IT TO HOMEWORK
     Exercice = "Not Set"
     Deadline = "Not Set"
-    Status = "Not Set"
+    Status = "Pending"
     MyFile.write(f"{NewSubject},{Exercice},{Deadline},{Status}\n")
     #CLOSING THE FILE
     MyFile.close()
@@ -367,14 +406,14 @@ def ViewExam():
             print(f"Subject: {Exams[i][0]} \nDate: {Exams[i][1]}\n")
     return
 
-a = 0
-while a == 0:
+
+while True:
     #CALLING THE FUNCTION
     answer = home()
 
     #ENTERING THE DASHBOARD MENU
     if answer == 1:
-        print('Dashboard')
+        Dashboard()
 
     #ENTERING THE SUBJECTS MENU
     elif answer == 2:
@@ -415,8 +454,6 @@ while a == 0:
             EditExam()
         elif choice == 4:
             ViewExam()
-    
-    elif answer == 5:
-        a = 1
 
-        
+        elif answer == 5:
+            break    
