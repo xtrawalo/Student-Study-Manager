@@ -674,6 +674,10 @@ while True:
 - datetime Module 
 
 ## Installation
+To Download it check the latest Windows version from the **Releases** page.
+
+Here :  [StudentStudyManager-v1.0.0](https://github.com/xtrawalo/Student-Study-Manager/releases/latest)
+
 
 ## Author
 
