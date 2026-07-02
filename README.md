@@ -13,6 +13,7 @@
   - [WorkFlow](#workflow)
 - [Built With](#built-with)
 - [Installation](#installation)
+- [AI Usage](#ai-usage)
 - [Author](#author)
 
 ## How it works
@@ -678,6 +679,9 @@ To Download it check the latest Windows version from the **Releases** page.
 
 Here :  [StudentStudyManager-v1.0.0](https://github.com/xtrawalo/Student-Study-Manager/releases/latest)
 
+## AI USAGE
+
+This project is my own work. I used Claude only for debugging.
 
 ## Author
 
