@@ -1,5 +1,12 @@
-#Importing csv to read it
+#Importing csv to read it and time
 import csv
+from datetime import date
+#Creating files if the aren't existing
+import os
+for f in ("Subjects.csv", "Homework.csv", "Exams.csv"):
+    if not os.path.exists(f):
+        open(f, "w").close()
+
 #CREATING FUNCTIONs SO WE CAN RECALL IT LATER WHEN RETURN
 def home():
     #INFORMING USER WHAT HE SHOULD DO 
@@ -30,6 +37,8 @@ def Dashboard():
     print("===================================")
     print("             Dashboard             ")
     print("===================================")
+    today = date.today()
+    print(f"Today : {today.strftime("%d/%m/%Y")} ")
     FileName = 'Subjects.csv'
     AccessMode = 'r'
     with open(FileName, AccessMode) as MyFile:
@@ -37,7 +46,10 @@ def Dashboard():
         Subjects = []
         for subject in Rows:
             Subjects.append(",".join(subject))
-        print(f"Subjects          : {len(Subjects)}")
+        if not Subjects:
+            print(f"Subjects          : 0")
+        else:
+            print(f"Subjects          : {len(Subjects)}")
     FileName = 'Homework.csv'
     AccessMode = 'r'
     with open(FileName, AccessMode) as MyFile:
@@ -61,7 +73,10 @@ def Dashboard():
         Exams = []
         for exam in Rows:
             Exams.append(exam[0])
-        print(f"Exams             : {len(Exams)}")
+        if not Exams:
+            print(f"Exams             : 0")
+        else:
+            print(f"Exams             : {len(Exams)}")
         
     return
 
@@ -96,6 +111,8 @@ def AddSub():
     MyFile = open(FileName, AccessMode)
     #ADD A NEW SUBJECT
     NewSubject = input("Enter a New Subject : ")
+    while "," in NewSubject:
+        NewSubject = input("Enter a New Subject (without a comma \",\") : ")
     MyFile.write(f"{NewSubject}\n")
     #CLOSING THE FILE
     MyFile.close()
@@ -122,19 +139,33 @@ def DeleteSub():
         Rows = csv.reader(MyFile)
         Subjects = []
         for subject in Rows:
-            Subjects.append(subject[0])        
-        for i in range(len(Subjects)):
-            print(f"{i}. {Subjects[i]}")
-    #choosing a Subject to delete
-    operation = int(input(f'Choose a subject to delete (0-{i}) : '))
-    #deleting the subject
-    print(f'{Subjects[operation]} was deleted successfully !')
-    del Subjects[operation]
-    #Editing the Subjects File
-    AccessMode = "w"
-    MyFile = open(FileName, AccessMode) 
-    for i in range(len(Subjects)):
-        MyFile.write(f"{Subjects[i]}\n")
+            Subjects.append(subject[0]) 
+        if not Subjects:
+            print("No subjects yet.")
+        else:       
+            for i in range(len(Subjects)):
+                print(f"{i}. {Subjects[i]}")
+            #choosing a Subject to delete
+            while True:
+                try:
+                    operation = int(input(f'Choose a subject to delete (0-{i}) : '))
+                    break
+                except:
+                    print('Invalid Number')
+            #PREVENTING USER TO ENTER A NUMBER OVER 5 OR LESS THAN 1
+            while operation < 0 or operation > i :
+                try:
+                    operation = int(input(f'Choose a subject to delete (0-{i}) : '))
+                except:
+                    print('Invalid Number')
+            #deleting the subject
+            print(f'{Subjects[operation]} was deleted successfully !')
+            del Subjects[operation]
+            #Editing the Subjects File
+            AccessMode = "w"
+            MyFile = open(FileName, AccessMode) 
+            for i in range(len(Subjects)):
+                MyFile.write(f"{Subjects[i]}\n")
     #Close the file
     MyFile.close()
         
@@ -147,13 +178,19 @@ def DeleteSub():
         Homework = []
         for subject in Rows:
             Homework.append(subject)
-    #deleting everything related to that subject
-    del Homework[operation]
+        if not Homework:
+            print("No subjects yet.")
+        else: 
+            #deleting everything related to that subject
+            del Homework[operation]
     #Editing the Homework File
     AccessMode = "w"
-    MyFile = open(FileName, AccessMode) 
-    for i in range(len(Homework)):
-        MyFile.write(f"{Homework[i][0]},{Homework[i][1]},{Homework[i][2]},{Homework[i][3]}\n")
+    MyFile = open(FileName, AccessMode)
+    if not Homework:
+        pass
+    else:  
+        for i in range(len(Homework)):
+            MyFile.write(f"{Homework[i][0]},{Homework[i][1]},{Homework[i][2]},{Homework[i][3]}\n")
     #Close the file
     MyFile.close()
     return
@@ -167,19 +204,38 @@ def EditSub():
         Rows = csv.reader(MyFile)
         Subjects = []
         for subject in Rows:
-            Subjects.append(subject[0])        
-        for i in range(len(Subjects)):
-            print(f"{i}. {Subjects[i]}")
-    #choosing a subject to edit
-    operation = int(input(f'Choose a subject to edit (0-{i}) : '))
-    NewSub = input("Enter the new Subject name : ")
-    #editing the subject
-    Subjects[operation] = NewSub
+            Subjects.append(subject[0])   
+        if not Subjects:
+            print("No subjects yet.")
+        else:     
+            for i in range(len(Subjects)):
+                print(f"{i}. {Subjects[i]}")
+            #choosing a subject to edit
+            while True:
+                try:
+                    operation = int(input(f'Choose a subject to edit (0-{i}) : '))
+                    break
+                except:
+                    print('Invalid Number')
+            #PREVENTING USER TO ENTER A NUMBER OVER i OR LESS THAN 0
+            while operation < 0 or operation > i :
+                try:
+                    operation = int(input(f'Choose a subject to edit (0-{i}) : '))
+                except:
+                    print('Invalid Number')
+            NewSub = input("Enter the new Subject name : ")
+            while "," in NewSub:
+                NewSub = input("Enter a New Subject (without a comma \",\") : ")
+            #editing the subject
+            Subjects[operation] = NewSub
     #Editing the Subjects File
     AccessMode = "w"
     MyFile = open(FileName, AccessMode) 
-    for i in range(len(Subjects)):
-        MyFile.write(f'{Subjects[i]}\n')
+    if not Subjects:
+        pass
+    else: 
+        for i in range(len(Subjects)):
+            MyFile.write(f'{Subjects[i]}\n')
     #Close the file
     MyFile.close()
     #OPENING THE Homework FILE
@@ -191,13 +247,19 @@ def EditSub():
         Homework = []
         for homework in Rows:
             Homework.append(homework) 
-    #editing the subject name
-        Homework[operation][0] = NewSub
+        #editing the subject name
+        if not Homework:
+            pass
+        else: 
+            Homework[operation][0] = NewSub
     #saving the subject name in homework
     AccessMode = "w"
     MyFile = open(FileName, AccessMode) 
-    for i in range(len(Homework)):
-        MyFile.write(f"{Homework[i][0]},{Homework[i][1]},{Homework[i][2]},{Homework[i][3]}\n")
+    if not Homework:
+        pass
+    else: 
+        for i in range(len(Homework)):
+            MyFile.write(f"{Homework[i][0]},{Homework[i][1]},{Homework[i][2]},{Homework[i][3]}\n")
     #Close the file
     MyFile.close()
     return
@@ -234,8 +296,14 @@ def AddHome():
     MyFile = open(FileName, AccessMode)
     #ADDing The HOMEWORK
     Subject = input("Enter ur subject:")
-    Exercice = input('Enter ur exercice:')
+    while "," in Subject:
+        Subject = input("Enter ur subject (without a comma \",\") : ")
+    Exercice = input('Enter ur exercise:')
+    while "," in Exercice:
+        Exercice = input("Enter ur exercise (without a comma \",\") : ")
     Deadline = input('Enter ur deadline:')
+    while "," in Deadline:
+        Deadline = input("Enter ur deadline (without a comma \",\") : ")
     Status = "Not Finished"
     MyFile.write(f"{Subject},{Exercice},{Deadline},{Status}\n")
     #CLOSING THE FILE
@@ -251,17 +319,34 @@ def DeleteHome():
         Homework = []
         for subject in Rows:
             Homework.append(subject)
-        for i, homework in enumerate(Homework):
-            print(i, homework)
-        operation = int(input(f"choose a homework to delete (0-{i}) : "))
-        del Homework[operation]
+        if not Homework:
+            print("No Homework yet.")
+        else:   
+            for i, homework in enumerate(Homework):
+                print(i, homework)
+            while True:
+                try:
+                    operation = int(input(f"choose a homework to delete (0-{i}) : "))
+                    break
+                except:
+                    print('Invalid Number')
+            #PREVENTING USER TO ENTER A NUMBER OVER i OR LESS THAN 0
+            while operation < 0 or operation > i :
+                try:
+                    operation = int(input(f"choose a homework to delete (0-{i}) : "))
+                except:
+                    print('Invalid Number')
+            del Homework[operation]
     #Opening Homework file
     FileName = "Homework.csv"
     AccessMode = "w"
     MyFile = open(FileName, AccessMode)
     #Saving changes
-    for i in range(len(Homework)):
-        MyFile.write(f"{Homework[i][0]},{Homework[i][1]},{Homework[i][2]},{Homework[i][3]}\n")
+    if not Homework:
+        pass
+    else:   
+        for i in range(len(Homework)):
+            MyFile.write(f"{Homework[i][0]},{Homework[i][1]},{Homework[i][2]},{Homework[i][3]}\n")
     #Close the file
     MyFile.close()
     return
@@ -274,23 +359,46 @@ def EditHome():
         Rows = list(csv.reader(MyFile))
         Homework = []
         for homework in Rows:
-            Homework.append(homework)        
-        for i in range(len(Homework)):
-            print(f"{i}. {Homework[i][0]}")
-        operation = int(input(f'Choose a Homework to edit (0-{i}) : '))
-        NewEx = input('Enter new Exercice (0 to keep old one): ')
-        if NewEx != "0":
-            Homework[operation][1] = NewEx
-        Newdate = input('Enter new Deadline (0 to keep old one) : ')
-        if Newdate != "0":
-            Homework[operation][2] = Newdate
-        NewStat = input('Enter new Status (0 to keep old one) : ')
-        if NewStat != "0":
-            Homework[operation][3] = NewStat
+            Homework.append(homework) 
+        if not Homework:
+            print("No Homework yet.")
+        else:          
+            for i in range(len(Homework)):
+                print(f"{i}. {Homework[i][0]}")
+            while True:
+                try:
+                    operation = int(input(f'Choose a Homework to edit (0-{i}) : '))
+                    break
+                except:
+                    print('Invalid Number')
+            #PREVENTING USER TO ENTER A NUMBER OVER i OR LESS THAN 0
+            while operation < 0 or operation > i :
+                try:
+                    operation = int(input(f'Choose a Homework to edit (0-{i}) : '))
+                except:
+                    print('Invalid Number')
+            NewEx = input('Enter new Exercice (0 to keep old one): ')
+            while "," in NewEx:
+                NewEx = input("Enter new Exercice (0 to keep old one) (without a comma \",\") : ")
+            if NewEx != "0":
+                Homework[operation][1] = NewEx
+            Newdate = input('Enter new Deadline (0 to keep old one) : ')
+            while "," in Newdate:
+                Newdate = input("Enter new Deadline (0 to keep old one) (without a comma \",\") : ")
+            if Newdate != "0":
+                Homework[operation][2] = Newdate
+            NewStat = input('Enter new Status (0 to keep old one) : ')
+            while "," in NewStat:
+                NewStat = input("Enter new Status (0 to keep old one) (without a comma \",\") : ")
+            if NewStat != "0":
+                Homework[operation][3] = NewStat
     AccessMode = "w"
     MyFile = open(FileName, AccessMode)
-    for i in range(len(Homework)):
-        MyFile.write(f"{Homework[i][0]},{Homework[i][1]},{Homework[i][2]},{Homework[i][3]}\n")
+    if not Homework:
+        pass
+    else:   
+        for i in range(len(Homework)):
+            MyFile.write(f"{Homework[i][0]},{Homework[i][1]},{Homework[i][2]},{Homework[i][3]}\n")
     #Close the file
     MyFile.close()
     return
@@ -303,9 +411,12 @@ def ViewHome():
         Rows = list(csv.reader(MyFile))
         Homework = []
         for homework in Rows:
-            Homework.append(homework)  
-        for i in range(len(Homework)):
-            print(f"Subject: {Homework[i][0]} \nExercise: {Homework[i][1]} \nDue: {Homework[i][2]} \nStatus :{Homework[i][3]}\n")
+            Homework.append(homework) 
+        if not Homework:
+            print("No Homework yet.")
+        else:    
+            for i in range(len(Homework)):
+                print(f"Subject: {Homework[i][0]} \nExercise: {Homework[i][1]} \nDue: {Homework[i][2]} \nStatus :{Homework[i][3]}\n")
     return
 
 def Exams():
@@ -340,7 +451,11 @@ def AddExam():
     MyFile = open(FileName, AccessMode)
     #ADDing The Exam
     Subject = input("Enter the exam subject : ")
+    while "," in Subject:
+        Subject = input("Enter the exam subject (without a comma \",\") : ")
     Date = input("Enter the date of the exam : ")
+    while "," in Date:
+        Date = input("Enter the date of the exam (without a comma \",\") : ")
     MyFile.write(f"{Subject},{Date}\n")
     #CLOSING THE FILE
     MyFile.close()
@@ -355,17 +470,34 @@ def DeleteExam():
         Exams = []
         for exam in Rows:
             Exams.append(exam)
-        for i, exam in enumerate(Exams):
-            print(i, exam)
-        operation = int(input(f"choose an exam to delete (0-{i}) : "))
-        del Exams[operation]
+        if not Exams:
+            print("No subjects yet.")
+        else:   
+            for i, exam in enumerate(Exams):
+                print(i, exam)
+            while True:
+                try:
+                    operation = int(input(f"choose an exam to delete (0-{i}) : "))
+                    break
+                except:
+                    print('Invalid Number')
+            #PREVENTING USER TO ENTER A NUMBER OVER i OR LESS THAN 0
+            while operation < 0 or operation > i :
+                try:
+                    operation = int(input(f"choose an exam to delete (0-{i}) : "))
+                except:
+                    print('Invalid Number')
+            del Exams[operation]
     #Opening Exams file
     FileName = "Exams.csv"
     AccessMode = "w"
     MyFile = open(FileName, AccessMode)
     #Saving changes
-    for i in range(len(Exams)):
-        MyFile.write(f"{Exams[i][0]},{Exams[i][1]}\n")
+    if not Exams:
+        pass
+    else:   
+        for i in range(len(Exams)):
+            MyFile.write(f"{Exams[i][0]},{Exams[i][1]}\n")
     #Close the file
     MyFile.close()
     return
@@ -378,17 +510,36 @@ def EditExam():
         Rows = list(csv.reader(MyFile))
         Exams = []
         for exam in Rows:
-            Exams.append(exam)        
-        for i in range(len(Exams)):
-            print(f"{i}. {Exams[i][0]}")
-        operation = int(input(f'Choose an exam to edit (0-{i}) : '))
-        NewExam = input('Enter new date (0 to keep old one): ')
-        if NewExam != "0":
-            Exams[operation][1] = NewExam
+            Exams.append(exam)   
+        if not Exams:
+            print("No exams yet.")
+        else:        
+            for i in range(len(Exams)):
+                print(f"{i}. {Exams[i][0]}")
+            while True:
+                try:
+                    operation = int(input(f'Choose an exam to edit (0-{i}) : '))
+                    break
+                except:
+                    print('Invalid Number')
+            #PREVENTING USER TO ENTER A NUMBER OVER i OR LESS THAN 0
+            while operation < 0 or operation > i :
+                try:
+                    operation = int(input(f'Choose an exam to edit (0-{i}) : '))
+                except:
+                    print('Invalid Number')
+            NewExam = input('Enter new date (0 to keep old one): ')
+            while "," in NewExam:
+                NewExam = input("Enter new date (0 to keep old one) (without a comma \",\") : ")
+            if NewExam != "0":
+                Exams[operation][1] = NewExam
     AccessMode = "w"
     MyFile = open(FileName, AccessMode)
-    for i in range(len(Exams)):
-        MyFile.write(f"{Exams[i][0]},{Exams[i][1]}\n")
+    if not Exams:
+        pass
+    else:   
+        for i in range(len(Exams)):
+            MyFile.write(f"{Exams[i][0]},{Exams[i][1]}\n")
     #Close the file
     MyFile.close()
     return
@@ -402,11 +553,14 @@ def ViewExam():
         Exams = []
         for exam in Rows:
             Exams.append(exam)  
-        for i in range(len(Exams)):
-            print(f"Subject: {Exams[i][0]} \nDate: {Exams[i][1]}\n")
+        if not Exams:
+            print("No Exams yet.")
+        else:   
+            for i in range(len(Exams)):
+                print(f"Subject: {Exams[i][0]} \nDate: {Exams[i][1]}\n")
     return
 
-
+#Program starts here
 while True:
     #CALLING THE FUNCTION
     answer = home()
@@ -419,7 +573,7 @@ while True:
     elif answer == 2:
         choice = Subjects()
         if choice == 0:
-            home()
+            continue
         elif choice == 1:
             AddSub()
         elif choice == 2:
@@ -431,7 +585,7 @@ while True:
     elif answer == 3:
         choice = Homework()
         if choice == 0:
-            home()
+            continue
         elif choice == 1:   
             AddHome()
         elif choice == 2:
@@ -445,7 +599,7 @@ while True:
     elif answer == 4:
         choice = Exams()
         if choice == 0:
-            home()
+            continue
         elif choice == 1:   
             AddExam()
         elif choice == 2:
@@ -455,5 +609,5 @@ while True:
         elif choice == 4:
             ViewExam()
 
-        elif answer == 5:
-            break    
+    elif answer == 5:
+        break    
