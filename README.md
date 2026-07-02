@@ -12,15 +12,11 @@
 - Stores data using CSV files
 - Simple command-line interface
 
----
-
 ## Built With
 
-- Python 3
-- csv module
-- datetime module (if used)
-
----
+- Python
+- csv Module
+- datetime Module 
 
 ## Installation
 
@@ -28,3 +24,7 @@
 2. Make sure Python 3 is installed.
 3. Open the project folder.
 4. Run:
+
+## Author
+
+Me : [xtrawalo](https://github.com/xtrawalo)
